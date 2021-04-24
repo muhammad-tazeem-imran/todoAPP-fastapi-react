@@ -68,50 +68,6 @@ module.exports = {
           },
         ],
       },
-      // {
-      //   test: /\.module\.s(c|a)ss$/,
-      //   use: [
-      //     {
-      //       loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-      //     },
-      //     {
-      //       loader: 'css-loader',
-      //       options: {
-      //         modules: true,
-      //         sourceMap: !isProduction
-      //       },
-      //     },
-      //     {
-      //       loader: 'sass-loader',
-      //       options: {
-      //         sourceMap: !isProduction
-      //       },
-      //     }
-      //   ]
-      // },
-      // {
-      //   test: /s(c|a)ss$/,
-      //   use: [
-      //     {
-      //       loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-      //     },
-      //     {
-      //       loader: 'css-loader',
-      //       options: { sourceMap: !isProduction },
-      //     },
-      //     {
-      //       loader: 'sass-loader',
-      //       options: { sourceMap: !isProduction },
-      //     }
-      //   ]
-      // },
-      // {
-      //   test: /\.css$/,
-      //   use: [
-      //     'style-loader',
-      //     'css-loader',
-      //   ],
-      // },
       {
         test: /\.(woff(2)?|ttf|eot|png|svg|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
