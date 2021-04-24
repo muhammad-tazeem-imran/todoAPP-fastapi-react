@@ -1,14 +1,17 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { IgnorePlugin } = require('webpack');
 
-const mode = process.env.NODE_ENV;
+const isProduction = process.env.NODE_ENV === 'production';
+const sassModuleRegex = /\.module.s[ac]ss$/i
+const sassRegex = /\.s[ac]ss$/i
 
 module.exports = {
   output: {
-    filename: mode === 'production' ? 'bundle.[contenthash].js' : 'bundle.[hash].js',
+    filename: isProduction ? 'bundle.[contenthash].js' : 'bundle.[hash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     pathinfo: false, /* Optimization feature to remove garbage collection */
@@ -37,12 +40,78 @@ module.exports = {
         loader: 'html-loader',
       },
       {
-        test: /\.css$/,
+        test: sassModuleRegex,
         use: [
-          'style-loader',
-          'css-loader',
+          !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { sourceMap: false, modules: true },
+          },
+          {
+            loader: 'postcss-loader',
+            options: { sourceMap: false },
+          },
         ],
       },
+      {
+        test: sassRegex,
+        exclude: sassModuleRegex,
+        use: [
+          !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {sourceMap: false},
+          },
+          {
+            loader: 'postcss-loader',
+            options: { ident: 'postcss', sourceMap: false },
+          },
+        ],
+      },
+      // {
+      //   test: /\.module\.s(c|a)ss$/,
+      //   use: [
+      //     {
+      //       loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+      //     },
+      //     {
+      //       loader: 'css-loader',
+      //       options: {
+      //         modules: true,
+      //         sourceMap: !isProduction
+      //       },
+      //     },
+      //     {
+      //       loader: 'sass-loader',
+      //       options: {
+      //         sourceMap: !isProduction
+      //       },
+      //     }
+      //   ]
+      // },
+      // {
+      //   test: /s(c|a)ss$/,
+      //   use: [
+      //     {
+      //       loader: isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+      //     },
+      //     {
+      //       loader: 'css-loader',
+      //       options: { sourceMap: !isProduction },
+      //     },
+      //     {
+      //       loader: 'sass-loader',
+      //       options: { sourceMap: !isProduction },
+      //     }
+      //   ]
+      // },
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     'style-loader',
+      //     'css-loader',
+      //   ],
+      // },
       {
         test: /\.(woff(2)?|ttf|eot|png|svg|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
@@ -53,6 +122,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: !isProduction ? '[name].css' : '[name].[hash].css',
+      chunkFilename: !isProduction ? '[id].css' : '[id].[hash].css'
+    }),
     new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({
       template: './src/index.html',
@@ -60,7 +133,7 @@ module.exports = {
       favicon: './assets/favicon.ico',
     }),
     new Dotenv({
-      path: `./.env${mode === 'production' ? '' : '.development'}`,
+      path: `./.env${isProduction ? '' : '.development'}`,
     }),
     new IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
