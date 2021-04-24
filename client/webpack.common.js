@@ -9,6 +9,22 @@ const isProduction = process.env.NODE_ENV === 'production';
 const sassModuleRegex = /\.module.s[ac]ss$/i
 const sassRegex = /\.s[ac]ss$/i
 
+const getSassLoaders = ({ modules = false, sourceMap = false }) => [
+  !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
+  {
+    loader: 'css-loader',
+    options: { sourceMap, modules },
+  },
+  {
+    loader: 'postcss-loader',
+    options: {
+      sourceMap,
+      postcssOptions: { parser: "postcss" },
+    },
+  },
+  'sass-loader',
+];
+
 module.exports = {
   output: {
     filename: isProduction ? 'bundle.[contenthash].js' : 'bundle.[hash].js',
@@ -41,34 +57,12 @@ module.exports = {
       },
       {
         test: sassModuleRegex,
-        use: [
-          !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: { sourceMap: false, modules: true },
-          },
-          {
-            loader: 'postcss-loader',
-            options: { sourceMap: false },
-          },
-          'sass-loader',
-        ],
+        use: getSassLoaders({ modules: true, sourceMap: !isProduction })
       },
       {
         test: sassRegex,
         exclude: sassModuleRegex,
-        use: [
-          !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {sourceMap: false},
-          },
-          {
-            loader: 'postcss-loader',
-            options: { ident: 'postcss', sourceMap: false },
-          },
-          'sass-loader',
-        ],
+        use: getSassLoaders({ sourceMap: !isProduction })
       },
       {
         test: /\.(woff(2)?|ttf|eot|png|svg|jpe?g|gif)(\?v=\d+\.\d+\.\d+)?$/,
