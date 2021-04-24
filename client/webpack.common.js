@@ -51,6 +51,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: { sourceMap: false },
           },
+          'sass-loader',
         ],
       },
       {
@@ -66,6 +67,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: { ident: 'postcss', sourceMap: false },
           },
+          'sass-loader',
         ],
       },
       {
