@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    container_name: todo_db
+    image: postgres:13.1-alpine
+    env_file: ./server/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker-contexts/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  server:
+    container_name: todo_fastapi
+    build:
+      context: .
+      dockerfile: ./docker-contexts/fastapi/Dockerfile
+    env_file: ./server/.env
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./server:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  client:
+    container_name: todo_react
+    build:
+      context: .
+      dockerfile: ./docker-contexts/react/Dockerfile
+    volumes:
+      - ./client:/app
+      - shared:/app/dist
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: yarn dev
+
+volumes:
+  postgres_data:
+  shared:
