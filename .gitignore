@@ -26,3 +26,6 @@ yarn-error.log*
 
 # Any temporary files
 /temp
+
+# pyc
+*.pyc
