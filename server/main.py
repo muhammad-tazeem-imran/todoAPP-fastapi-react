@@ -5,23 +5,21 @@ from schemas import TodoSchema
 from database import get_db
 from models import Todo
 
-from utils import prefixVersion
-
 
 app = FastAPI();
 
 
-@app.get(prefixVersion('/todos/'))
+@app.get('/api/v1/todos/')
 def list_todos(db : Session = Depends(get_db)):
     return db.query(Todo).all()
 
 
-@app.get(prefixVersion('/todos/{{todo_id}}'))
+@app.get('/api/v1/todos/{{todo_id}}')
 def get_todo(todo_id: int, db : Session = Depends(get_db)):
     return db.query(Todo).filter(Todo.id == todo_id).first()
 
 
-@app.post(prefixVersion('/todos/'))
+@app.post('/api/v1/todos/')
 def create_todo(todo: TodoSchema, db : Session = Depends(get_db)):
     to_create = Todo(
         title=todo.title,
@@ -37,7 +35,7 @@ def create_todo(todo: TodoSchema, db : Session = Depends(get_db)):
     }
 
 
-@app.delete(prefixVersion('/todos/{{todo_id}}'))
+@app.delete('/api/v1/todos/{todo_id}')
 def delete_todo(todo_id: int, db : Session = Depends(get_db)):
     to_delete = db.query(Todo).filter(Todo.id == todo_id).first()
     db.delete(to_delete)
@@ -45,10 +43,10 @@ def delete_todo(todo_id: int, db : Session = Depends(get_db)):
     return todo_id
 
 
-@app.patch(prefixVersion('/todos/{{todo_id}}'))
+@app.put('/api/v1/todos/{todo_id}')
 def update_todo(todo_id: int, todo: TodoSchema, db : Session = Depends(get_db)):
     to_update = db.query(Todo).filter(Todo.id == todo_id).first()
-    to_update.title = TodoSchema.title
-    to_update.description = TodoSchema.description
+    to_update.title = todo.title
+    to_update.description = todo.description
 
     db.commit()
