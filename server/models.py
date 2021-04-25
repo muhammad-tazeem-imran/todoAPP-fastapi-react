@@ -1,13 +1,17 @@
 from datetime import datetime
-from typing import Optional
 
-from pydantic import BaseModel
+from sqlalchemy import Integer, String, DateTime
+from sqlalchemy.sql.expression import null
+from sqlalchemy.sql.schema import Column
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+
+from database import Base, get_db
 
 
-class Todo(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
+class Todo(Base):
+    __tablename__ = 'todos'
 
-    created_at: datetime
-    modified_at: datetime
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+
