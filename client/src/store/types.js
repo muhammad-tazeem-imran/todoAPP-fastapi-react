@@ -8,6 +8,9 @@ const defaultTypes = {
   UPDATE_TODOS_REQUEST: null,
   UPDATE_TODOS_SUCCESS: null,
   UPDATE_TODOS_FAILURE: null,
+  DELETE_TODOS_REQUEST: null,
+  DELETE_TODOS_SUCCESS: null,
+  DELETE_TODOS_FAILURE: null,
 }
 
 function mirrorKey(types) {

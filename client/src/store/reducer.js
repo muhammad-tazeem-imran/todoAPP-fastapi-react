@@ -6,6 +6,7 @@ const initialState = {
   isTodosLoading: false,
   isUpdateTodoLoading: [],
   isAddTodoLoading: false,
+  isDeleteTodoLoading: [],
 
   error: null,
 };
@@ -40,6 +41,21 @@ export default function crawlerReducer(state = initialState, action) {
       return { ...state, isUpdateTodoLoading: false };
     case types.UPDATE_TODOS_FAILURE:
       return { ...state, isUpdateTodoLoading: false, error: action.payload };
+
+    case types.DELETE_TODOS_REQUEST:
+      const newDeleteTodos = [...state.isDeleteTodoLoading];
+      newDeleteTodos.push(action.payload.id);
+
+      return {
+        ...state,
+        isDeleteTodoLoading: true,
+        isDeleteTodoLoading: newDeleteTodos,
+      };
+
+    case types.DELETE_TODOS_SUCCESS:
+      return { ...state, isDeleteTodoLoading: false };
+    case types.DELETE_TODOS_FAILURE:
+      return { ...state, isDeleteTodoLoading: false, error: action.payload };
 
     default:
       return state;
