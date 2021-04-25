@@ -1,5 +1,5 @@
 import {
-  call, put, takeFirst
+  call, put, takeLeading
 } from 'redux-saga/effects';
 
 import services from '../services';
@@ -34,7 +34,7 @@ function* updateTodoSaga({ payload }) {
 }
 
 export default function* todosWatcherSaga() {
-  yield takeFirst(types.FETCH_TODOS_REQUEST, fetchTodoSaga);
-  yield takeFirst(types.ADD_TODOS_REQUEST, addTodoSaga);
-  yield takeFirst(types.UPDATE_TODOS_REQUEST, updateTodoSaga);
+  yield takeLeading(types.FETCH_TODOS_REQUEST, fetchTodoSaga);
+  yield takeLeading(types.ADD_TODOS_REQUEST, addTodoSaga);
+  yield takeLeading(types.UPDATE_TODOS_REQUEST, updateTodoSaga);
 }
