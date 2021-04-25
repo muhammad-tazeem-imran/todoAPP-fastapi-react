@@ -9,11 +9,7 @@ function AddNewCard() {
 
   const rootStyles = !showInput ? styles.emptyRoot : styles.root;
 
-  const handleSubmit = () => {
-    console.log('here');
-    event.preventDefault();
-    setShowInput(false);
-  }
+  const onSubmit = () => setShowInput(false);
 
   const onClick = () => {
     if (!showInput) {
@@ -25,7 +21,7 @@ function AddNewCard() {
   return (
     <div className={rootStyles} onClick={onClick}>
       {showInput ? (
-        <EditTodo handleSubmit={handleSubmit}/>
+        <EditTodo onSubmit={onSubmit} />
       ) : (
         <div className={styles.description}> + Add a new task </div>
       )}

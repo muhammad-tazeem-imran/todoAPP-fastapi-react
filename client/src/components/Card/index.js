@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import styles from './styles.module.scss';
 import Button from '../Button';
+import * as actions from '../../store/actions';
+import EditTodo from '../EditTodo';
 
-function Card({title, description}) {
+function Card({id, title, description}) {
+  const dispatch = useDispatch();
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleEdit = () => setShowEdit(true);
+  const handleDelete = () => dispatch(actions.deleteTodos({ id }));
+  const onSubmit = () => setShowEdit(false);
+
+  if (showEdit) {
+    return (
+      <EditTodo
+        id={id}
+        currentTitle={title}
+        currentDescription={description}
+        onSubmit={onSubmit}
+      />
+    )
+  }
+
   return (
     <div className={styles.cardRoot}>
       <h3 className={styles.title}> {title} </h3>
@@ -14,8 +35,8 @@ function Card({title, description}) {
       </div>
 
       <div className={styles.buttonWrapper}>
-        <Button text="Edit" />
-        <Button text="Delete" variant="secondary"/>
+        <Button text="Edit" onClick={handleEdit}/>
+        <Button text="Delete" variant="secondary" onClick={handleDelete}/>
       </div>
     </div>
   )

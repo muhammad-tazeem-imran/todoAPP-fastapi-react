@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
+import * as actions from '../../store/actions';
 import styles from './styles.module.scss';
 import Button from '../Button';
 
-function EditTodo({ handleSubmit }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+function EditTodo({ id, currentTitle, currentDescription, onSubmit }) {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState(currentTitle);
+  const [description, setDescription] = useState(currentDescription);
+
+  const handleSubmit = (event) => {
+    const actionToDispatch = id
+      ? actions.updateTodos({id, title, description})
+      : actions.addTodos({title, description});
+    dispatch(actionToDispatch);
+    onSubmit();
+    event.preventDefault();
+  }
 
   return (
     <div className={styles.root}>
@@ -38,8 +50,18 @@ function EditTodo({ handleSubmit }) {
 }
 
 EditTodo.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
+  id: PropTypes.string,
+  currentTitle: PropTypes.string,
+  currentDescription: PropTypes.string,
+  onSubmit: PropTypes.func,
 };
+
+EditTodo.defaultProps = {
+  id: undefined,
+  currentTitle: '',
+  currentDescription: '',
+  onSubmit: () => {},
+}
 
 export default EditTodo;
 
