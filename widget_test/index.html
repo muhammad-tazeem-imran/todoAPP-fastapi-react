@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            (function () {
+            var s = document.createElement('script'),
+                r = encodeURI(window.location.href),
+                l = document.documentElement.lang,
+                a = '41219'
+            ;
+            s.type = 'text/javascript';
+            s.src = '//genesis.localhost:8000/external/?lang=' + l + '&referrer=' + r + '&agency=' + a + '&source=test_tier1';
+            s.async = true;
+            console.log(s);
+            (document.getElementsByTagName('head')[0] || document.documentElement).appendChild(s);
+            })();
+        </script>
+    </head>
+    <body>
+        <button class="modal-request-test-drive">
+            Open Request Test Drive modal
+        </button>
+    </body>
+</html>
